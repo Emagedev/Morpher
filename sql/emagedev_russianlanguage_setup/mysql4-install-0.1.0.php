@@ -32,7 +32,7 @@ $installer = $this;
 $installer->startSetup();
 
 $installer->run("
-CREATE TABLE {$installer->getTable('emagedev_russian/inflections')} (
+CREATE TABLE {$installer->getTable('emagedev_russian/inflection')} (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `phrase` text NOT NULL,
   `inflection` VARCHAR(1) NOT NULL,
