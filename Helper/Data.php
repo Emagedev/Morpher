@@ -57,25 +57,24 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
 
     protected function _tryMorpher($phrase, $inflection, $multi = false)
     {
-        // Magento encode doesn't work somehow.
-        $urlPhrase = urlencode($phrase);
-        $path = self::MORPHER_URI . '?s=' . $urlPhrase;
-
-        $curl = new Varien_Http_Adapter_Curl();
-        $curl->setConfig(array(
-            'timeout'   => 15,
-            'userpwd'   => 'omedrec:zaq12wsxcvf'
-        ));
-        $curl->write(Zend_Http_Client::GET, $path, '1.0');
-        $response = $curl->read();
-        $headerSize = $curl->getInfo(CURLINFO_HEADER_SIZE);
-        $header = substr($response, 0, $headerSize);
-        $body = substr($response, $headerSize);
-
-        $curl->close();
-
         $readyPhrase = $phrase;
         try {
+            // Magento encode doesn't work somehow.
+            $urlPhrase = urlencode($phrase);
+            $path = self::MORPHER_URI . '?s=' . $urlPhrase;
+
+            $curl = new Varien_Http_Adapter_Curl();
+            $curl->setConfig(array(
+                'timeout'   => 15,
+                'userpwd'   => 'omedrec:zaq12wsxcvf'
+            ));
+            $curl->write(Zend_Http_Client::GET, $path, '1.0');
+            $response = $curl->read();
+            $headerSize = $curl->getInfo(CURLINFO_HEADER_SIZE);
+            $header = substr($response, 0, $headerSize);
+            $body = substr($response, $headerSize);
+
+            $curl->close();
             $xml = new SimpleXMLElement($body);
 
             $readyPhrase = $xml->{$inflection};
