@@ -6,6 +6,23 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
 
     protected $_hasModel = false;
 
+    public function inflectByNumber($number, $phrase)
+    {
+        $exclusions = array(11, 12);
+
+        if(!in_array($number, $exclusions)) {
+            $lower = $number % 10;
+
+            if($lower == 1) {
+                return $number . ' ' . $phrase;
+            } elseif (in_array($lower, array(2,3,4))) {
+                return $number . ' ' . $this->inflect($phrase, 'Р', false);
+            }
+        }
+
+        return $number . ' ' . $this->inflect($phrase, 'Р', true);
+    }
+
     public function inflect($phrase, $inflection, $multi = false)
     {
         $inflectedPhrase = $this->_tryModel($phrase, $inflection, $multi);
@@ -77,10 +94,18 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
             $curl->close();
             $xml = new SimpleXMLElement($body);
 
-            $readyPhrase = $xml->{$inflection};
+            if($multi) {
+                $readyPhrase = $xml->{'множественное'}->{$inflection};
+            } else {
+                $readyPhrase = $xml->{$inflection};
+            }
         }
         catch (Exception $e) {
             Mage::log($e->getMessage());
+        }
+
+        if(empty($readyPhrase)) {
+            $readyPhrase = $phrase;
         }
 
         return $readyPhrase;
