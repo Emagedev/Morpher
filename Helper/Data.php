@@ -8,19 +8,24 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
 
     public function inflectByNumber($number, $phrase)
     {
-        $exclusions = array(11, 12);
+        return $number . ' ' . mb_strtolower($this->inflectWordByNumber($number, $phrase), 'UTF-8');
+    }
 
-        if(!in_array($number, $exclusions)) {
+    public function inflectWordByNumber($number, $phrase)
+    {
+        $number = abs($number % 100);
+
+        if ($number<=11 || $number>=19) {
             $lower = $number % 10;
 
             if($lower == 1) {
-                return $number . ' ' . $phrase;
+                return $this->inflect($phrase, 'И', false);;
             } elseif (in_array($lower, array(2,3,4))) {
-                return $number . ' ' . $this->inflect($phrase, 'Р', false);
+                return $this->inflect($phrase, 'Р', false);
             }
         }
 
-        return $number . ' ' . $this->inflect($phrase, 'Р', true);
+        return $this->inflect($phrase, 'Р', true);
     }
 
     public function inflect($phrase, $inflection, $multi = false)
