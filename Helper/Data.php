@@ -19,7 +19,7 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
             $lower = $number % 10;
 
             if($lower == 1) {
-                return $this->inflect($phrase, 'И', false);;
+                return $phrase;
             } elseif (in_array($lower, array(2,3,4))) {
                 return $this->inflect($phrase, 'Р', false);
             }
