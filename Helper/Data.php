@@ -1,6 +1,7 @@
 <?php
 
-class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
+class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract
+{
     const MORPHER_URI = "http://api.morpher.ru/WebService.asmx/GetXml";
     const MORPHER_MULTI = 'множественное';
 
@@ -15,12 +16,12 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
     {
         $number = abs($number % 100);
 
-        if ($number<=11 || $number>=19) {
+        if ($number < 11 || $number > 19) {
             $lower = $number % 10;
 
-            if($lower == 1) {
+            if ($lower == 1) {
                 return $phrase;
-            } elseif (in_array($lower, array(2,3,4))) {
+            } elseif (in_array($lower, array(2, 3, 4))) {
                 return $this->inflect($phrase, 'Р', false);
             }
         }
@@ -31,7 +32,7 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
     public function inflect($phrase, $inflection, $multi = false)
     {
         $inflectedPhrase = $this->_tryModel($phrase, $inflection, $multi);
-        if(empty($inflectedPhrase)) {
+        if (empty($inflectedPhrase)) {
             $inflectedPhrase = $this->_tryMorpher($phrase, $inflection, $multi)[0];
             $this->_saveInflection($phrase, $inflection, $multi, $inflectedPhrase);
         }
@@ -55,7 +56,7 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
 
         $collection->load();
 
-        foreach($collection->getItems() as $_item) {
+        foreach ($collection->getItems() as $_item) {
             $this->_hasModel = true;
             return $_item->getInflectedPhrase();
         }
@@ -67,12 +68,14 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
     {
         /** @var Emagedev_RussianLanguage_Model_Inflection $model */
         $model = Mage::getModel('emagedev_russian/inflection');
-        $model->setData(array(
-            'phrase' => $phrase,
-            'inflection' => $inflection,
-            'multi' => $multi,
-            'inflected_phrase' => $inflectedPhrase
-        ));
+        $model->setData(
+            array(
+                'phrase'           => $phrase,
+                'inflection'       => $inflection,
+                'multi'            => $multi,
+                'inflected_phrase' => $inflectedPhrase
+            )
+        );
 
         $model->save();
     }
@@ -86,10 +89,12 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
             $path = self::MORPHER_URI . '?s=' . $urlPhrase;
 
             $curl = new Varien_Http_Adapter_Curl();
-            $curl->setConfig(array(
-                'timeout'   => 15,
-                'userpwd'   => 'omedrec:zaq12wsxcvf'
-            ));
+            $curl->setConfig(
+                array(
+                    'timeout' => 15,
+                    'userpwd' => 'omedrec:zaq12wsxcvf'
+                )
+            );
             $curl->write(Zend_Http_Client::GET, $path, '1.0');
             $response = $curl->read();
             $headerSize = $curl->getInfo(CURLINFO_HEADER_SIZE);
@@ -99,17 +104,16 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract {
             $curl->close();
             $xml = new SimpleXMLElement($body);
 
-            if($multi) {
+            if ($multi) {
                 $readyPhrase = $xml->{'множественное'}->{$inflection};
             } else {
                 $readyPhrase = $xml->{$inflection};
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             Mage::log($e->getMessage());
         }
 
-        if(empty($readyPhrase)) {
+        if (empty($readyPhrase)) {
             $readyPhrase = $phrase;
         }
 
