@@ -36,7 +36,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Omedrec Startpage module to newer versions in the future.
+ * the Emagedev RussianLanguage module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -108,8 +108,12 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @return string
      */
-    public function inflectWordByNumber($number, $phrase, $keepNumber = false)
+    public function inflectWordByNumber($number, $phrase, $keepNumber = false, $translate = true)
     {
+        if ($translate) {
+            $phrase = $this->__($phrase);
+        }
+
         $meaningNumber = abs($number % 100);
         $word = $phrase;
 

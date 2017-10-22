@@ -36,7 +36,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Omedrec Startpage module to newer versions in the future.
+ * the Emagedev RussianLanguage module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -56,7 +56,7 @@
  */
 class Emagedev_RussianLanguage_Model_Morpher_Api_Adapter
 {
-    const URI = "http://api.morpher.ru/WebService.asmx/GetXml";
+    const URI = "https://ws3.morpher.ru/russian/declension";
 
     /**
      * Create new request and dispatch data

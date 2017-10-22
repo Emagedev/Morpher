@@ -1,5 +1,4 @@
-<?xml version="1.0"?>
-<!--
+<?php
 /**
  * Emagedev extension for Magento
  *
@@ -44,53 +43,67 @@
  */
 
 /**
- *
  * @category   Emagedev
  * @package    Emagedev_RussianLanguage
- * @subpackage Config
+ * @subpackage Test
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
--->
-<config>
-    <modules>
-        <Emagedev_RussianLanguage>
-            <version>1.0.0</version>
-        </Emagedev_RussianLanguage>
-    </modules>
-    <global>
-        <helpers>
-            <emagedev_russian>
-                <class>Emagedev_RussianLanguage_Helper</class>
-            </emagedev_russian>
-        </helpers>
-        <resources>
-            <emagedev_russianlanguage_setup>
-                <setup>
-                    <module>Emagedev_RussianLanguage</module>
-                    <connection>core_setup</connection>
-                </setup>
-            </emagedev_russianlanguage_setup>
-        </resources>
-        <models>
-            <emagedev_russian>
-                <class>Emagedev_RussianLanguage_Model</class>
-                <resourceModel>emagedev_russian_resource</resourceModel>
-            </emagedev_russian>
-            <emagedev_russian_resource>
-                <class>Emagedev_RussianLanguage_Model_Resource</class>
-                <entities>
-                    <inflection>
-                        <table>emagedev_russian_inflections</table>
-                    </inflection>
-                </entities>
-            </emagedev_russian_resource>
-        </models>
-    </global>
-    <phpunit>
-        <suite>
-            <modules>
-                <Emagedev_RussianLanguage />
-            </modules>
-        </suite>
-    </phpunit>
-</config>
+
+/**
+ * Class Emagedev_RussianLanguage_Test_Model_Morpher_Api_Dispatcher
+ */
+class Emagedev_RussianLanguage_Test_Model_Morpher_Api_Dispatcher extends EcomDev_PHPUnit_Test_Case
+{
+    /**
+     * Check is example response dispatched correctly
+     *
+     * @param string $phrase
+     * @param string $file
+     * @param array  $flags
+     *
+     * @dataProvider dataProvider
+     * @test
+     */
+    public function checkXmlProcessing($phrase, $file, $flags = array())
+    {
+        $filePath = __DIR__ . DS . '_data' . DS . $file;
+        $expectRaw = file_get_contents($filePath);
+        $expectXmlObject = new SimpleXMLElement($expectRaw);
+
+        $this->mockModel('emagedev_russian/inflection', array('save'))
+            ->replaceByMock('model');
+
+        $forms = $this->getModel()->dispatchXmlData($expectXmlObject, $phrase, $flags);
+
+        /**
+         * @var int $iterator
+         * @var Emagedev_RussianLanguage_Model_Inflection $form
+         */
+        foreach ($forms as $iterator => $form) {
+            $expectations = $this->expected('auto')->getData();
+            $found = false;
+
+            foreach ($expectations as $expectation) {
+                if ($form->getPhrase() == $expectation['phrase']
+                    && $form->getInflection() == $expectation['inflection']
+                    && $form->getMulti() == $expectation['multi']
+                ) {
+                    $found = true;
+                    $this->assertSame($expectation, $form->getData());
+                }
+            }
+
+            $this->assertTrue($found);
+        }
+    }
+
+    /**
+     * Get model for testing
+     *
+     * @return Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
+     */
+    protected function getModel()
+    {
+        return Mage::getModel('emagedev_russian/morpher_api_dispatcher');
+    }
+}

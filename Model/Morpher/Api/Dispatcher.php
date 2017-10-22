@@ -36,7 +36,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Omedrec Startpage module to newer versions in the future.
+ * the Emagedev RussianLanguage module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -70,7 +70,9 @@ class Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
     {
         $flagsKey = implode(',', $flags);
 
-        $this->dispatchInflectionNodes($document, $phrase, false, $flagsKey);
+        $forms = $this->dispatchInflectionNodes($document, $phrase, false, $flagsKey);
+
+        return $forms;
     }
 
     /**
@@ -94,8 +96,8 @@ class Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
                 $newForm = $this->saveNewForm(
                     $phrase,
                     $node->getName(),
-                    $node->__toString(),
                     $multipleForm,
+                    $node->__toString(),
                     $flagsKey
                 );
 
@@ -132,7 +134,7 @@ class Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
             ->setInflection($inflection)
             ->setMulti($multipleForm)
             ->setInflectedPhrase($result)
-            ->setFlagsKey($flagsKey)
+            ->setFlags($flagsKey)
             ->save();
 
         return $newForm;

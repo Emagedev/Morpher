@@ -52,45 +52,23 @@
  */
 -->
 <config>
-    <modules>
-        <Emagedev_RussianLanguage>
-            <version>1.0.0</version>
-        </Emagedev_RussianLanguage>
-    </modules>
-    <global>
-        <helpers>
-            <emagedev_russian>
-                <class>Emagedev_RussianLanguage_Helper</class>
-            </emagedev_russian>
-        </helpers>
+    <acl>
         <resources>
-            <emagedev_russianlanguage_setup>
-                <setup>
-                    <module>Emagedev_RussianLanguage</module>
-                    <connection>core_setup</connection>
-                </setup>
-            </emagedev_russianlanguage_setup>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <searchsuggestion translate="title" module="searchsuggestion">
+                                        <title>Search suggestion</title>
+                                    </searchsuggestion>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
         </resources>
-        <models>
-            <emagedev_russian>
-                <class>Emagedev_RussianLanguage_Model</class>
-                <resourceModel>emagedev_russian_resource</resourceModel>
-            </emagedev_russian>
-            <emagedev_russian_resource>
-                <class>Emagedev_RussianLanguage_Model_Resource</class>
-                <entities>
-                    <inflection>
-                        <table>emagedev_russian_inflections</table>
-                    </inflection>
-                </entities>
-            </emagedev_russian_resource>
-        </models>
-    </global>
-    <phpunit>
-        <suite>
-            <modules>
-                <Emagedev_RussianLanguage />
-            </modules>
-        </suite>
-    </phpunit>
+    </acl>
 </config>
