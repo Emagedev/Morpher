@@ -31,15 +31,30 @@
 $installer = $this;
 $installer->startSetup();
 
-$installer->run("
-CREATE TABLE {$installer->getTable('emagedev_russian/inflection')} (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `phrase` text NOT NULL,
-  `inflection` VARCHAR(1) NOT NULL,
-  `multi` TINYINT NOT NULL DEFAULT 0,
-  `inflected_phrase` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-");
+$installer = $this;
+/* @var $installer Mage_Eav_Model_Entity_Setup */
+
+$table = $installer->getConnection()
+    ->newTable($installer->getTable('emagedev_russian/inflection'))
+    ->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+        'identity'  => true,
+        'unsigned'  => true,
+        'nullable'  => false,
+        'primary'   => true,
+    ), 'Id')
+    ->addColumn('phrase', Varien_Db_Ddl_Table::TYPE_TEXT, null, array(
+        'nullable'  => false,
+    ), 'Phrase to Inflect')
+    ->addColumn('inflection', Varien_Db_Ddl_Table::TYPE_VARCHAR, 5, array(
+        'default'   => 0,
+        'nullable'  => false,
+    ), 'Inflection Code')
+    ->addColumn('multi', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
+        'nullable'  => false,
+    ), 'Is Multiple Form')
+    ->addColumn('inflected_phrase', Varien_Db_Ddl_Table::TYPE_TEXT, null, array(
+        'nullable'  => false,
+    ), 'Result');
+$installer->getConnection()->createTable($table);
 
 $installer->endSetup();
