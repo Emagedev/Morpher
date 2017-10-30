@@ -1,0 +1,56 @@
+c1:
+  - phrase: тест
+    inflection: Р
+    multi: -
+    inflected_phrase: теста
+    flags: ''
+  - phrase: тест
+    inflection: Д
+    multi: -
+    inflected_phrase: тесту
+    flags: ''
+  - phrase: тест
+    inflection: В
+    multi: -
+    inflected_phrase: тест
+    flags: ''
+  - phrase: тест
+    inflection: Т
+    multi: -
+    inflected_phrase: тестом
+    flags: ''
+  - phrase: тест
+    inflection: П
+    multi: -
+    inflected_phrase: тесте
+    flags: ''
+  - phrase: тест
+    inflection: И
+    multi: +
+    inflected_phrase: тесты
+    flags: ''
+  - phrase: тест
+    inflection: Р
+    multi: -
+    inflected_phrase: тестов
+    flags: ''
+  - phrase: тест
+    inflection: Д
+    multi: +
+    inflected_phrase: тестам
+    flags: ''
+  - phrase: тест
+    inflection: В
+    multi: +
+    inflected_phrase: тесты
+    flags: ''
+  - phrase: тест
+    inflection: Т
+    multi: +
+    inflected_phrase: тестами
+    flags: ''
+  - phrase: тест
+    inflection: П
+    multi: +
+    inflected_phrase: тестах
+    flags: ''

@@ -1,4 +1,5 @@
-<?php
+<?xml version="1.0"?>
+<!--
 /**
  * Emagedev extension for Magento
  *
@@ -43,21 +44,31 @@
  */
 
 /**
+ *
  * @category   Emagedev
  * @package    Emagedev_RussianLanguage
- * @subpackage Model
+ * @subpackage Config
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
-
-class Emagedev_RussianLanguage_Model_Resource_Inflection_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
-{
-    /**
-     * Init menu collection
-     *
-     * @return void
-     */
-    protected function _construct()
-    {
-        $this->_init('emagedev_russian/inflection');
-    }
-}
+-->
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <morpher_api translate="title" module="emagedev_russian">
+                                        <title>Morpher.ru API</title>
+                                    </morpher_api>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

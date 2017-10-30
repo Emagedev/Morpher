@@ -49,15 +49,65 @@
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
 
-class Emagedev_RussianLanguage_Model_Resource_Inflection_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
+/**
+ * Class Emagedev_RussianLanguage_Model_Morpher
+ */
+class Emagedev_RussianLanguage_Model_Morpher
 {
     /**
-     * Init menu collection
+     * Inflect word, first try cache, then API
      *
-     * @return void
+     * @param string $phrase
+     * @param string $inflection
+     * @param bool   $multi
+     *
+     * @return string
      */
-    protected function _construct()
+    public function inflect($phrase, $inflection, $multi = false, $flags = array())
     {
-        $this->_init('emagedev_russian/inflection');
+        $inflectedPhrase = $this->cacheLookup($phrase, $inflection, $multi);
+
+        if (empty($inflectedPhrase)) {
+            $this->runMorpher($phrase, $flags);
+        }
+
+        $inflectedPhrase = $this->cacheLookup($phrase, $inflection, $multi);
+
+        return $inflectedPhrase ? $inflectedPhrase->getInflectedPhrase() : $phrase;
+    }
+
+    /**
+     * Try to find word in cache
+     *
+     * @param string $phrase
+     * @param string $inflection
+     * @param bool   $multi
+     * @param array  $flags
+     *
+     * @return Emagedev_RussianLanguage_Model_Inflection
+     */
+    protected function cacheLookup($phrase, $inflection, $multi = false, $flags = array())
+    {
+        /** @var Emagedev_RussianLanguage_Model_Resource_Inflection_Collection $collection */
+        $collection = Mage::getModel('emagedev_russian/inflection')->getCollection();
+        $collection
+            ->addFieldToFilter('phrase', $phrase)
+            ->addFieldToFilter('inflection', $inflection)
+            ->addFieldToFilter('multi', $multi);
+
+        return $collection->getFirstItem();
+    }
+
+    /**
+     * Run API request
+     *
+     * @param $phrase
+     * @param $flags
+     */
+    protected function runMorpher($phrase, $flags)
+    {
+        /** @var Emagedev_RussianLanguage_Model_Morpher_Api_Adapter $morpher */
+        $morpher = Mage::getModel('emagedev_russian/morpher_api_adapter');
+        $morpher->run($phrase, $flags);
     }
 }

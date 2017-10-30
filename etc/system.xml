@@ -1,4 +1,5 @@
-<?php
+<?xml version="1.0"?>
+<!--
 /**
  * Emagedev extension for Magento
  *
@@ -43,21 +44,45 @@
  */
 
 /**
+ *
  * @category   Emagedev
  * @package    Emagedev_RussianLanguage
- * @subpackage Model
+ * @subpackage Config
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
-
-class Emagedev_RussianLanguage_Model_Resource_Inflection_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
-{
-    /**
-     * Init menu collection
-     *
-     * @return void
-     */
-    protected function _construct()
-    {
-        $this->_init('emagedev_russian/inflection');
-    }
-}
+-->
+<config>
+    <sections>
+        <morpher_api translate="label" module="emagedev_russian">
+            <label>Morpher.ru API</label>
+            <frontend_type>text</frontend_type>
+            <sort_order>120</sort_order>
+            <show_in_default>1</show_in_default>
+            <tab>service</tab>
+            <groups>
+                <general translate="label">
+                    <label>General</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>100</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <fields>
+                        <login translate="label comment">
+                            <label>Website login</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <comment><![CDATA[<p>Login used on morpher.ru</p>]]></comment>
+                        </login>
+                        <password translate="label comment">
+                            <label>Website password</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <comment><![CDATA[<p>Password used on morpher.ru</p>]]></comment>
+                        </password>
+                    </fields>
+                </general>
+            </groups>
+        </morpher_api>
+    </sections>
+</config>

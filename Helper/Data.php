@@ -1,122 +1,251 @@
 <?php
+/**
+ * Emagedev extension for Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *   * Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in
+ *     the documentation and/or other materials provided with the
+ *     distribution.
+ *
+ *   * Neither the name of Sebastian Bergmann nor the names of his
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade
+ * the Emagedev RussianLanguage module to newer versions in the future.
+ *
+ * @copyright  Copyright (C), emagedev.com
+ * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
+ */
 
-class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract
+/**
+ * @category   Emagedev
+ * @package    Emagedev_RussianLanguage
+ * @subpackage Helper
+ * @author     Dmitry Burlakov <dantaeusb@icloud.com>
+ */
+
+/**
+ * Class Emagedev_RussianLanguage_Helper_Data
+ *
+ * Contains all usable constants for API,
+ * and lot of useful interfaces
+ */
+class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Data
 {
-    const MORPHER_URI = "http://api.morpher.ru/WebService.asmx/GetXml";
-    const MORPHER_MULTI = 'множественное';
+    const NOMINATIVE = 'И';
+    const GENITIVE = 'Р';
+    const ACCUSATIVE = 'В';
+    const DATIVE = 'Д';
+    const INSTRUMENTAL = 'Т';
+    const PREPOSITIONAL = 'П';
+    const PREPOSITIONAL_WITH_PREFIX = 'П_о';
+    const LOCATION = 'М';
 
-    protected $_hasModel = false;
+    const FLAG_FEMININE = 'feminine';
+    const FLAG_MASCULINE = 'masculine';
+    const FLAG_ANIMATE = 'animate';
+    const FLAG_INANIMATE = 'inanimate';
+    const FLAG_COMMON = 'common';
+    const FLAG_NAME = 'name';
 
-    public function inflectByNumber($number, $phrase)
+    /**
+     * Get array of possible inflections of the word
+     *
+     * @return array
+     */
+    public function getInflections()
     {
-        return $number . ' ' . mb_strtolower($this->inflectWordByNumber($number, $phrase), 'UTF-8');
+        return array(
+            self::NOMINATIVE,
+            self::GENITIVE,
+            self::ACCUSATIVE,
+            self::DATIVE,
+            self::INSTRUMENTAL,
+            self::PREPOSITIONAL,
+            self::PREPOSITIONAL_WITH_PREFIX,
+            self::LOCATION
+        );
     }
 
-    public function inflectWordByNumber($number, $phrase)
+    /**
+     * Get available helper flags
+     *
+     * @return array
+     */
+    public function getAvailableFlags()
     {
-        $number = abs($number % 100);
+        return array(
+            self::FLAG_FEMININE,
+            self::FLAG_MASCULINE,
+            self::FLAG_ANIMATE,
+            self::FLAG_INANIMATE,
+            self::FLAG_COMMON,
+            self::FLAG_NAME
+        );
+    }
 
-        if ($number < 11 || $number > 19) {
-            $lower = $number % 10;
+    /**
+     * Inflect some phrase by number
+     *
+     * @param int         $number
+     * @param string      $phrase
+     * @param bool        $keepNumber shall final (returned) phrase contains number in front of it
+     * @param bool|string $translate  shall given phrase be translated before processing, if string
+     *                                provided, uses string as helper code
+     *
+     * @return string
+     */
+    public function inflectWordByNumber($number, $phrase, $keepNumber = false, $translate = false)
+    {
+        $meaningNumber = abs($number % 100);
+
+        if ($meaningNumber != 0 && ($meaningNumber < 11 || $meaningNumber > 19)) {
+            $lower = $meaningNumber % 10;
 
             if ($lower == 1) {
-                return $phrase;
+                $word = $this->inflectWord($phrase, self::NOMINATIVE, false, array(), $translate);
             } elseif (in_array($lower, array(2, 3, 4))) {
-                return $this->inflect($phrase, 'Р', false);
+                $word = $this->inflectWord($phrase, self::GENITIVE, false, array(), $translate);
+            } else {
+                $word = $this->inflectWord($phrase, self::GENITIVE, true, array(), $translate);
             }
+        } else {
+            $word = $this->inflectWord($phrase, self::GENITIVE, true, array(), $translate);
         }
 
-        return $this->inflect($phrase, 'Р', true);
-    }
-
-    public function inflect($phrase, $inflection, $multi = false)
-    {
-        $inflectedPhrase = $this->_tryModel($phrase, $inflection, $multi);
-        if (empty($inflectedPhrase)) {
-            $inflectedPhrase = $this->_tryMorpher($phrase, $inflection, $multi)[0];
-            $this->_saveInflection($phrase, $inflection, $multi, $inflectedPhrase);
+        if ($keepNumber) {
+            return $number . ' ' . $word;
         }
 
-        return $inflectedPhrase;
+        return $word;
     }
 
-    protected function _tryModel($phrase, $inflection, $multi = false)
+    /**
+     * Inflect some name (same as any phrase, but with helper flag, see API docs
+     *
+     * @param string $name
+     * @param string $inflection
+     * @param array  $flags
+     *
+     * @return string
+     */
+    public function inflectName($name, $inflection, $flags = array())
     {
-        /** @var Emagedev_RussianLanguage_Model_Inflection $model */
-        $model = Mage::getModel('emagedev_russian/inflection');
+        return $this->inflectWord($name, $inflection, array_merge($flags, array(self::FLAG_NAME)));
+    }
 
-        $multi = (int)$multi;
+    /**
+     * Inflect male name
+     *
+     * @param string $name
+     * @param string $inflection
+     * @param array  $flags
+     *
+     * @return string
+     */
+    public function inflectMaleName($name, $inflection, $flags = array())
+    {
+        return $this->inflectWord(
+            $name, $inflection, array_merge($flags, array(self::FLAG_NAME, self::FLAG_MASCULINE))
+        );
+    }
 
-        /** @var Emagedev_RussianLanguage_Model_Resource_Inflection_Collection $collection */
-        $collection = $model->getCollection()
-            ->addFieldToSelect('inflected_phrase')
-            ->addFieldToFilter('phrase', array('eq' => $phrase))
-            ->addFieldToFilter('inflection', array('eq' => $inflection))
-            ->addFieldToFilter('multi', array('eq' => $multi));
+    /**
+     * Inflect female name
+     *
+     * @param string $name
+     * @param string $inflection
+     * @param array  $flags
+     *
+     * @return string
+     */
+    public function inflectFemaleName($name, $inflection, $flags = array())
+    {
+        return $this->inflectWord($name, $inflection, array_merge($flags, array(self::FLAG_NAME, self::FLAG_FEMININE)));
+    }
 
-        $collection->load();
+    /**
+     * Run inflection
+     *
+     * @param string      $phrase
+     * @param string      $inflection
+     * @param bool        $multi     multiple form
+     * @param array       $flags     additional flags for more correct inflections, on top of the file
+     * @param bool|string $translate shall given phrase be translated before processing, if string
+     *                               provided, uses string as helper code
+     *
+     * @return string
+     */
+    public function inflectWord($phrase, $inflection, $multi = false, $flags = array(), $translate = false)
+    {
+        if ($translate === true || is_string($translate)) {
+            /** @var Mage_Core_Helper_Data $translator */
+            $translator = $this;
+            if (is_string($translate)) {
+                $translator = Mage::helper($translate);
+            }
 
-        foreach ($collection->getItems() as $_item) {
-            $this->_hasModel = true;
-            return $_item->getInflectedPhrase();
+            $phrase = $translator->__($phrase);
+        }
+
+        try {
+            return $this->getMorpher()->inflect($phrase, $inflection, $multi, $flags);
+        } catch (Exception $e) {
+            Mage::logException($e);
+            return $phrase;
+        }
+    }
+
+    /**
+     * Get HTTP auth string or false if not set
+     *
+     * @return bool|string
+     */
+    public function getAuthString()
+    {
+        $login = Mage::getStoreConfig('morpher_api/general/login');
+
+        if ($login) {
+            $password = Mage::getStoreConfig('morpher_api/general/password');
+
+            if ($password) {
+                return $login . ':' . $password;
+            }
         }
 
         return false;
     }
 
-    protected function _saveInflection($phrase, $inflection, $multi = false, $inflectedPhrase)
+    /**
+     * @return Emagedev_RussianLanguage_Model_Morpher
+     */
+    protected function getMorpher()
     {
-        /** @var Emagedev_RussianLanguage_Model_Inflection $model */
-        $model = Mage::getModel('emagedev_russian/inflection');
-        $model->setData(
-            array(
-                'phrase'           => $phrase,
-                'inflection'       => $inflection,
-                'multi'            => $multi,
-                'inflected_phrase' => $inflectedPhrase
-            )
-        );
-
-        $model->save();
-    }
-
-    protected function _tryMorpher($phrase, $inflection, $multi = false)
-    {
-        $readyPhrase = $phrase;
-        try {
-            // Magento encode doesn't work somehow.
-            $urlPhrase = urlencode($phrase);
-            $path = self::MORPHER_URI . '?s=' . $urlPhrase;
-
-            $curl = new Varien_Http_Adapter_Curl();
-            $curl->setConfig(
-                array(
-                    'timeout' => 15,
-                    'userpwd' => 'omedrec:zaq12wsxcvf'
-                )
-            );
-            $curl->write(Zend_Http_Client::GET, $path, '1.0');
-            $response = $curl->read();
-            $headerSize = $curl->getInfo(CURLINFO_HEADER_SIZE);
-            $header = substr($response, 0, $headerSize);
-            $body = substr($response, $headerSize);
-
-            $curl->close();
-            $xml = new SimpleXMLElement($body);
-
-            if ($multi) {
-                $readyPhrase = $xml->{'множественное'}->{$inflection};
-            } else {
-                $readyPhrase = $xml->{$inflection};
-            }
-        } catch (Exception $e) {
-            Mage::log($e->getMessage());
-        }
-
-        if (empty($readyPhrase)) {
-            $readyPhrase = $phrase;
-        }
-
-        return $readyPhrase;
+        return Mage::getModel('emagedev_russian/morpher');
     }
 }

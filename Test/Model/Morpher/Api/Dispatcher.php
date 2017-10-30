@@ -45,19 +45,65 @@
 /**
  * @category   Emagedev
  * @package    Emagedev_RussianLanguage
- * @subpackage Model
+ * @subpackage Test
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
 
-class Emagedev_RussianLanguage_Model_Resource_Inflection_Collection extends Mage_Core_Model_Mysql4_Collection_Abstract
+/**
+ * Class Emagedev_RussianLanguage_Test_Model_Morpher_Api_Dispatcher
+ */
+class Emagedev_RussianLanguage_Test_Model_Morpher_Api_Dispatcher extends EcomDev_PHPUnit_Test_Case
 {
     /**
-     * Init menu collection
+     * Check is example response dispatched correctly
      *
-     * @return void
+     * @param string $phrase
+     * @param string $file
+     * @param array  $flags
+     *
+     * @dataProvider dataProvider
+     * @test
      */
-    protected function _construct()
+    public function checkXmlProcessing($phrase, $file, $flags = array())
     {
-        $this->_init('emagedev_russian/inflection');
+        $filePath = __DIR__ . DS . '_data' . DS . $file;
+        $expectRaw = file_get_contents($filePath);
+        $expectXmlObject = new SimpleXMLElement($expectRaw);
+
+        $this->mockModel('emagedev_russian/inflection', array('save'))
+            ->replaceByMock('model');
+
+        $forms = $this->getModel()->dispatchXmlData($expectXmlObject, $phrase, $flags);
+
+        /**
+         * @var int $iterator
+         * @var Emagedev_RussianLanguage_Model_Inflection $form
+         */
+        foreach ($forms as $iterator => $form) {
+            $expectations = $this->expected('auto')->getData();
+            $found = false;
+
+            foreach ($expectations as $expectation) {
+                if ($form->getPhrase() == $expectation['phrase']
+                    && $form->getInflection() == $expectation['inflection']
+                    && $form->getMulti() == $expectation['multi']
+                ) {
+                    $found = true;
+                    $this->assertSame($expectation, $form->getData());
+                }
+            }
+
+            $this->assertTrue($found);
+        }
+    }
+
+    /**
+     * Get model for testing
+     *
+     * @return Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
+     */
+    protected function getModel()
+    {
+        return Mage::getModel('emagedev_russian/morpher_api_dispatcher');
     }
 }
