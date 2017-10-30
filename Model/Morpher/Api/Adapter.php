@@ -70,27 +70,11 @@ class Emagedev_RussianLanguage_Model_Morpher_Api_Adapter
     {
         $readyPhrase = $phrase;
         try {
-            $curl = new Varien_Http_Adapter_Curl();
-            $curl->setConfig(
-                array(
-                    'timeout' => 15,
-                    'userpwd' => 'omedrec:zaq12wsxcvf'
-                )
-            );
-            $curl->write(
-                Zend_Http_Client::GET,
-                $this->getRequestUri($phrase, $flags),
-                1.1);
-            $response = $curl->read();
+            $result = $this->runHttpQuery($this->getConfig(), $this->getRequestUri($phrase, $flags));
 
-            $headerSize = $curl->getInfo(CURLINFO_HEADER_SIZE);
-            $header = substr($response, 0, $headerSize);
-            $body = substr($response, $headerSize);
+            $xml = new SimpleXMLElement($result['body']);
 
-            $curl->close();
-            $xml = new SimpleXMLElement($body);
-
-            $this->getDispatcher()->dispatchXmlData($xml, $flags);
+            $this->getDispatcher()->dispatchXmlData($xml, $phrase, $flags);
         } catch (Exception $e) {
             Mage::log($e->getMessage());
         }
@@ -100,6 +84,46 @@ class Emagedev_RussianLanguage_Model_Morpher_Api_Adapter
         }
 
         return $readyPhrase;
+    }
+
+    protected function runHttpQuery($config, $requestUri)
+    {
+        $curl = new Varien_Http_Adapter_Curl();
+        $curl->setConfig($config);
+        $curl->write(
+            Zend_Http_Client::GET,
+            $requestUri,
+            1.1);
+        $response = $curl->read();
+
+        $headerSize = $curl->getInfo(CURLINFO_HEADER_SIZE);
+        $header = substr($response, 0, $headerSize);
+        $body = substr($response, $headerSize);
+
+        $curl->close();
+
+        return array(
+            'header' => $header,
+            'body' => $body
+        );
+    }
+
+    /**
+     * Get cURL params array
+     *
+     * @return array
+     */
+    protected function getConfig()
+    {
+        $params = array('timeout' => 15);
+
+        $auth = $this->getDataHelper()->getAuthString();
+
+        if (is_string($auth)) {
+            $params['userpwd'] = $auth;
+        }
+
+        return $params;
     }
 
     /**

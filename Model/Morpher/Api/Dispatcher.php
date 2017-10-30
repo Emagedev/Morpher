@@ -65,6 +65,8 @@ class Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
      * @param SimpleXMLElement $document
      * @param string           $phrase
      * @param array            $flags
+     *
+     * @return array
      */
     public function dispatchXmlData(SimpleXMLElement $document, $phrase, $flags)
     {

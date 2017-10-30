@@ -1,0 +1,6 @@
+c0:
+  result: 'testphrasethatwillnottranslateonothermodules'
+c1:
+  result: 'test1'
+c2:
+  result: 'test2'

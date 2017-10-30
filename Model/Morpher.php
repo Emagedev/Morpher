@@ -55,6 +55,8 @@
 class Emagedev_RussianLanguage_Model_Morpher
 {
     /**
+     * Inflect word, first try cache, then API
+     *
      * @param string $phrase
      * @param string $inflection
      * @param bool   $multi
@@ -64,21 +66,25 @@ class Emagedev_RussianLanguage_Model_Morpher
     public function inflect($phrase, $inflection, $multi = false, $flags = array())
     {
         $inflectedPhrase = $this->cacheLookup($phrase, $inflection, $multi);
+
         if (empty($inflectedPhrase)) {
-            $inflectedPhrase = $this->tryMorpher($phrase, $inflection, $multi)[0];
-            $this->saveInflection($phrase, $inflection, $multi, $inflectedPhrase);
+            $this->runMorpher($phrase, $flags);
         }
 
-        return $inflectedPhrase;
+        $inflectedPhrase = $this->cacheLookup($phrase, $inflection, $multi);
+
+        return $inflectedPhrase ? $inflectedPhrase->getInflectedPhrase() : $phrase;
     }
 
     /**
+     * Try to find word in cache
+     *
      * @param string $phrase
      * @param string $inflection
      * @param bool   $multi
      * @param array  $flags
      *
-     * @return Varien_Object
+     * @return Emagedev_RussianLanguage_Model_Inflection
      */
     protected function cacheLookup($phrase, $inflection, $multi = false, $flags = array())
     {
@@ -92,6 +98,12 @@ class Emagedev_RussianLanguage_Model_Morpher
         return $collection->getFirstItem();
     }
 
+    /**
+     * Run API request
+     *
+     * @param $phrase
+     * @param $flags
+     */
     protected function runMorpher($phrase, $flags)
     {
         /** @var Emagedev_RussianLanguage_Model_Morpher_Api_Adapter $morpher */

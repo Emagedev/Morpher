@@ -67,4 +67,9 @@ class Emagedev_RussianLanguage_Model_Inflection extends Mage_Core_Model_Abstract
     {
         $this->_init('emagedev_russian/inflection');
     }
+
+    public function __toString()
+    {
+        return (string)$this->getInflectedPhrase();
+    }
 }

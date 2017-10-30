@@ -1,0 +1,3 @@
+config:
+  default/morpher_api/general/login: test
+  default/morpher_api/general/password: test

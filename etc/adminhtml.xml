@@ -60,9 +60,9 @@
                         <children>
                             <config>
                                 <children>
-                                    <searchsuggestion translate="title" module="searchsuggestion">
-                                        <title>Search suggestion</title>
-                                    </searchsuggestion>
+                                    <morpher_api translate="title" module="emagedev_russian">
+                                        <title>Morpher.ru API</title>
+                                    </morpher_api>
                                 </children>
                             </config>
                         </children>

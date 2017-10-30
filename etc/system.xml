@@ -53,10 +53,15 @@
 -->
 <config>
     <sections>
-        <api>
+        <morpher_api translate="label" module="emagedev_russian">
+            <label>Morpher.ru API</label>
+            <frontend_type>text</frontend_type>
+            <sort_order>120</sort_order>
+            <show_in_default>1</show_in_default>
+            <tab>service</tab>
             <groups>
-                <startpage translate="label">
-                    <label>Morpher.ru</label>
+                <general translate="label">
+                    <label>General</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>100</sort_order>
                     <show_in_default>1</show_in_default>
@@ -76,8 +81,8 @@
                             <comment><![CDATA[<p>Password used on morpher.ru</p>]]></comment>
                         </password>
                     </fields>
-                </startpage>
+                </general>
             </groups>
-        </api>
+        </morpher_api>
     </sections>
 </config>

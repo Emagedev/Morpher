@@ -1,0 +1,50 @@
+tables:
+  emagedev_russian/inflection:
+    - phrase: тест
+      inflection: И
+      multi: 0
+      inflected_phrase: тест
+    - phrase: тест
+      inflection: Р
+      multi: 0
+      inflected_phrase: теста
+    - phrase: тест
+      inflection: Д
+      multi: 0
+      inflected_phrase: тесту
+    - phrase: тест
+      inflection: В
+      multi: 0
+      inflected_phrase: тест
+    - phrase: тест
+      inflection: Т
+      multi: 0
+      inflected_phrase: тестом
+    - phrase: тест
+      inflection: П
+      multi: 0
+      inflected_phrase: тесте
+    - phrase: тест
+      inflection: И
+      multi: 1
+      inflected_phrase: тесты
+    - phrase: тест
+      inflection: Р
+      multi: 1
+      inflected_phrase: тестов
+    - phrase: тест
+      inflection: Д
+      multi: 1
+      inflected_phrase: тестам
+    - phrase: тест
+      inflection: В
+      multi: 1
+      inflected_phrase: тесты
+    - phrase: тест
+      inflection: Т
+      multi: 1
+      inflected_phrase: тестами
+    - phrase: тест
+      inflection: П
+      multi: 1
+      inflected_phrase: тестах

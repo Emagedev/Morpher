@@ -51,8 +51,11 @@
 
 /**
  * Class Emagedev_RussianLanguage_Helper_Data
+ *
+ * Contains all usable constants for API,
+ * and lot of useful interfaces
  */
-class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract
+class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Data
 {
     const NOMINATIVE = 'И';
     const GENITIVE = 'Р';
@@ -70,6 +73,11 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract
     const FLAG_COMMON = 'common';
     const FLAG_NAME = 'name';
 
+    /**
+     * Get array of possible inflections of the word
+     *
+     * @return array
+     */
     public function getInflections()
     {
         return array(
@@ -84,6 +92,11 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract
         );
     }
 
+    /**
+     * Get available helper flags
+     *
+     * @return array
+     */
     public function getAvailableFlags()
     {
         return array(
@@ -96,37 +109,33 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract
         );
     }
 
-    public function inflectByNumber($number, $phrase)
-    {
-        return $number . ' ' . mb_strtolower($this->inflectWordByNumber($number, $phrase), 'UTF-8');
-    }
-
     /**
-     * @param int    $number
-     * @param string $phrase
-     * @param bool   $keepNumber
+     * Inflect some phrase by number
+     *
+     * @param int         $number
+     * @param string      $phrase
+     * @param bool        $keepNumber shall final (returned) phrase contains number in front of it
+     * @param bool|string $translate  shall given phrase be translated before processing, if string
+     *                                provided, uses string as helper code
      *
      * @return string
      */
-    public function inflectWordByNumber($number, $phrase, $keepNumber = false, $translate = true)
+    public function inflectWordByNumber($number, $phrase, $keepNumber = false, $translate = false)
     {
-        if ($translate) {
-            $phrase = $this->__($phrase);
-        }
-
         $meaningNumber = abs($number % 100);
-        $word = $phrase;
 
-        if ($meaningNumber < 11 || $meaningNumber > 19) {
+        if ($meaningNumber != 0 && ($meaningNumber < 11 || $meaningNumber > 19)) {
             $lower = $meaningNumber % 10;
 
             if ($lower == 1) {
-                $word = $this->inflect($phrase, self::NOMINATIVE, false);
+                $word = $this->inflectWord($phrase, self::NOMINATIVE, false, array(), $translate);
             } elseif (in_array($lower, array(2, 3, 4))) {
-                $word = $this->inflect($phrase, self::GENITIVE, false);
+                $word = $this->inflectWord($phrase, self::GENITIVE, false, array(), $translate);
+            } else {
+                $word = $this->inflectWord($phrase, self::GENITIVE, true, array(), $translate);
             }
         } else {
-            $word = $this->inflect($phrase, self::GENITIVE, true);
+            $word = $this->inflectWord($phrase, self::GENITIVE, true, array(), $translate);
         }
 
         if ($keepNumber) {
@@ -136,31 +145,107 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Abstract
         return $word;
     }
 
+    /**
+     * Inflect some name (same as any phrase, but with helper flag, see API docs
+     *
+     * @param string $name
+     * @param string $inflection
+     * @param array  $flags
+     *
+     * @return string
+     */
     public function inflectName($name, $inflection, $flags = array())
     {
         return $this->inflectWord($name, $inflection, array_merge($flags, array(self::FLAG_NAME)));
     }
 
+    /**
+     * Inflect male name
+     *
+     * @param string $name
+     * @param string $inflection
+     * @param array  $flags
+     *
+     * @return string
+     */
     public function inflectMaleName($name, $inflection, $flags = array())
     {
-        return $this->inflectWord($name, $inflection, array_merge($flags, array(self::FLAG_NAME, self::FLAG_MASCULINE)));
+        return $this->inflectWord(
+            $name, $inflection, array_merge($flags, array(self::FLAG_NAME, self::FLAG_MASCULINE))
+        );
     }
 
+    /**
+     * Inflect female name
+     *
+     * @param string $name
+     * @param string $inflection
+     * @param array  $flags
+     *
+     * @return string
+     */
     public function inflectFemaleName($name, $inflection, $flags = array())
     {
         return $this->inflectWord($name, $inflection, array_merge($flags, array(self::FLAG_NAME, self::FLAG_FEMININE)));
     }
 
-    public function inflectWord($phrase, $inflection, $multi = false, $flags = array())
+    /**
+     * Run inflection
+     *
+     * @param string      $phrase
+     * @param string      $inflection
+     * @param bool        $multi     multiple form
+     * @param array       $flags     additional flags for more correct inflections, on top of the file
+     * @param bool|string $translate shall given phrase be translated before processing, if string
+     *                               provided, uses string as helper code
+     *
+     * @return string
+     */
+    public function inflectWord($phrase, $inflection, $multi = false, $flags = array(), $translate = false)
     {
-        $this->getAdapter()->inflect($phrase, $inflection, $multi, $flags);
+        if ($translate === true || is_string($translate)) {
+            /** @var Mage_Core_Helper_Data $translator */
+            $translator = $this;
+            if (is_string($translate)) {
+                $translator = Mage::helper($translate);
+            }
+
+            $phrase = $translator->__($phrase);
+        }
+
+        try {
+            return $this->getMorpher()->inflect($phrase, $inflection, $multi, $flags);
+        } catch (Exception $e) {
+            Mage::logException($e);
+            return $phrase;
+        }
     }
 
     /**
-     * @return Emagedev_RussianLanguage_Model_Morpher_Api_Adapter
+     * Get HTTP auth string or false if not set
+     *
+     * @return bool|string
      */
-    protected function getAdapter()
+    public function getAuthString()
     {
-        return Mage::getModel('emagedev_russian/morpher_api_adapter');
+        $login = Mage::getStoreConfig('morpher_api/general/login');
+
+        if ($login) {
+            $password = Mage::getStoreConfig('morpher_api/general/password');
+
+            if ($password) {
+                return $login . ':' . $password;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return Emagedev_RussianLanguage_Model_Morpher
+     */
+    protected function getMorpher()
+    {
+        return Mage::getModel('emagedev_russian/morpher');
     }
 }

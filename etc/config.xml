@@ -86,6 +86,17 @@
             </emagedev_russian_resource>
         </models>
     </global>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Emagedev_RussianLanguage>
+                    <files>
+                        <default>Emagedev_RussianLanguage.csv</default>
+                    </files>
+                </Emagedev_RussianLanguage>
+            </modules>
+        </translate>
+    </adminhtml>
     <phpunit>
         <suite>
             <modules>
