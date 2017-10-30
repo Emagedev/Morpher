@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Emagedev_RussianLanguage>
+            <version>0.1.0</version>
+        </Emagedev_RussianLanguage>
+    </modules>
+    <global>
+        <helpers>
+            <emagedev_russian>
+                <class>Emagedev_RussianLanguage_Helper</class>
+            </emagedev_russian>
+        </helpers>
+        <resources>
+            <emagedev_russianlanguage_setup>
+                <setup>
+                    <module>Emagedev_RussianLanguage</module>
+                    <connection>core_setup</connection>
+                </setup>
+            </emagedev_russianlanguage_setup>
+        </resources>
+        <models>
+            <emagedev_russian>
+                <class>Emagedev_RussianLanguage_Model</class>
+                <resourceModel>emagedev_russian_resource</resourceModel>
+            </emagedev_russian>
+            <emagedev_russian_resource>
+                <class>Emagedev_RussianLanguage_Model_Resource</class>
+                <entities>
+                    <inflection>
+                        <table>emagedev_russian_inflections</table>
+                    </inflection>
+                </entities>
+            </emagedev_russian_resource>
+        </models>
+    </global>
+</config>
