@@ -1,0 +1,5 @@
+"Morpher.ru API","API сайта morpher.ru"
+"Website login","Логин для API"
+"<p>Login used on morpher.ru</p>","<p>Логин, по которому можно использовать API morpher.ru с привелегиями</p>"
+"Website password","Пароль"
+"<p>Password used on morpher.ru</p>","<p>Пароль для API (возможно совпадает с паролем аккаунта) сайта morpher.ru</p>"

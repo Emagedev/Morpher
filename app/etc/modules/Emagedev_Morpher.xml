@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Emagedev_Morpher>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Emagedev_Morpher>
+    </modules>
+</config>

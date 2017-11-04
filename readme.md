@@ -124,6 +124,10 @@ Mage::helper('morpher')->inflectFemaleName('Любовь Эдуардовна С
 | Common    | Т        | `Emagedev_Morpher_Helper_Data::FLAG_COMMON`    |
 | Name      | П        | `Emagedev_Morpher_Helper_Data::FLAG_NAME`      |
 
+### Юнит тесты
+
+Основная логика покрыта, для запуска нужен модуль EcomDev_PHPUnit
+
 ---
 
 > **N.B. Не забывайте модифицировать ключи кэша для корректной работы с числами.**
