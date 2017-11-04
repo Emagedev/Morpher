@@ -1,6 +1,6 @@
 {
   "name": "dantaeusb/mage-morpher",
-  "description": "Magento extension to make easy ajax request to the backend from the frontend",
+  "description": "Magento extension to inflect russian word with API of website morpher.ru",
   "type": "magento-module",
   "license": "BSD-3-Clause",
   "authors": [
