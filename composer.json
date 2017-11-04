@@ -1,0 +1,22 @@
+{
+  "name": "dantaeusb/mage-morpher",
+  "description": "Magento extension to make easy ajax request to the backend from the frontend",
+  "type": "magento-module",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Dmitry Burlakov",
+      "email": "dantaeusb@icloud.com"
+    }
+  ],
+  "require-dev": {
+    "magento-hackathon/magento-composer-installer": "*",
+    "ecomdev/ecomdev_phpunit": "*"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/dantaeusb/mage-morpher.git"
+    }
+  ]
+}

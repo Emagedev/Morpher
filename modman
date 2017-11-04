@@ -1,0 +1,5 @@
+app/code/community/Emagedev/Morpher app/code/community/Emagedev/Morpher
+app/etc/modules/Emagedev_Morpher.xml app/etc/modules/Emagedev_Morpher.xml
+app/locale/en_US/Emagedev_Morpher.csv app/locale/en_US/Emagedev_Morpher.csv
+app/locale/ru_RU/Emagedev_Morpher.csv app/locale/ru_RU/Emagedev_Morpher.csv
+LICENSE app/code/community/Emagedev/Morpher/LICENSE
