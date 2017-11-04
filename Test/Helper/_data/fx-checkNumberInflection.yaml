@@ -1,5 +1,5 @@
 tables:
-  emagedev_russian/inflection:
+  morpher/inflection:
     - phrase: тест
       inflection: И
       multi: 0

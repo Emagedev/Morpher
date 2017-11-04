@@ -36,7 +36,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Emagedev RussianLanguage module to newer versions in the future.
+ * the Emagedev Morpher module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -44,17 +44,17 @@
 
 /**
  * @category   Emagedev
- * @package    Emagedev_RussianLanguage
+ * @package    Emagedev_Morpher
  * @subpackage Model
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
 
 /**
- * Class Emagedev_RussianLanguage_Model_Morpher_Api_Adapter
+ * Class Emagedev_Morpher_Model_Morpher_Api_Adapter
  *
  * Adapter model provides works with Morpher.ru rest API through cURL requests
  */
-class Emagedev_RussianLanguage_Model_Morpher_Api_Adapter
+class Emagedev_Morpher_Model_Morpher_Api_Adapter
 {
     const URI = "https://ws3.morpher.ru/russian/declension";
 
@@ -86,6 +86,14 @@ class Emagedev_RussianLanguage_Model_Morpher_Api_Adapter
         return $readyPhrase;
     }
 
+    /**
+     * Launch query
+     *
+     * @param $config
+     * @param $requestUri
+     *
+     * @return array
+     */
     protected function runHttpQuery($config, $requestUri)
     {
         $curl = new Varien_Http_Adapter_Curl();
@@ -174,20 +182,20 @@ class Emagedev_RussianLanguage_Model_Morpher_Api_Adapter
     /**
      * Get module data helper
      *
-     * @return Emagedev_RussianLanguage_Helper_Data
+     * @return Emagedev_Morpher_Helper_Data
      */
     protected function getDataHelper()
     {
-        return Mage::helper('emagedev_russian');
+        return Mage::helper('morpher');
     }
 
     /**
      * Get dispatcher to work with API response
      *
-     * @return Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
+     * @return Emagedev_Morpher_Model_Morpher_Api_Dispatcher
      */
     protected function getDispatcher()
     {
-        return Mage::getModel('emagedev_russian/morpher_api_dispatcher');
+        return Mage::getModel('morpher/morpher_api_dispatcher');
     }
 }

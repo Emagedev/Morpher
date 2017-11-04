@@ -36,7 +36,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Emagedev RussianLanguage module to newer versions in the future.
+ * the Emagedev Morpher module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -44,22 +44,22 @@
 
 /**
  * @category   Emagedev
- * @package    Emagedev_RussianLanguage
+ * @package    Emagedev_Morpher
  * @subpackage Test
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
 
 /**
- * Class Emagedev_RussianLanguage_Test_Helper_Data
+ * Class Emagedev_Mopher_Test_Helper_Data
  */
-class Emagedev_RussianLanguage_Test_Helper_Data extends EcomDev_PHPUnit_Test_Case
+class Emagedev_Mopher_Test_Helper_Data extends EcomDev_PHPUnit_Test_Case
 {
-    protected $helperAlias = 'emagedev_russian';
+    protected $helperAlias = 'morpher';
 
     /**
      * Get helper model to test
      *
-     * @return Emagedev_RussianLanguage_Helper_Data
+     * @return Emagedev_Morpher_Helper_Data
      */
     public function getHelper()
     {
@@ -78,7 +78,7 @@ class Emagedev_RussianLanguage_Test_Helper_Data extends EcomDev_PHPUnit_Test_Cas
      */
     public function checkNumberInflection($word, $number)
     {
-        $morpher = $this->mockModel('emagedev_russian/morpher', array('tryMorpher'));
+        $morpher = $this->mockModel('morpher/morpher', array('tryMorpher'));
 
         $morpher
             ->expects($this->never())
@@ -107,7 +107,7 @@ class Emagedev_RussianLanguage_Test_Helper_Data extends EcomDev_PHPUnit_Test_Cas
             ->setLocale(Mage_Core_Model_Locale::DEFAULT_LOCALE)
             ->init('adminhtml', true);
 
-        $morpher = $this->mockModel('emagedev_russian/morpher', array('inflect'));
+        $morpher = $this->mockModel('morpher/morpher', array('inflect'));
 
         $morpher
             ->expects($this->any())
@@ -117,7 +117,7 @@ class Emagedev_RussianLanguage_Test_Helper_Data extends EcomDev_PHPUnit_Test_Cas
         $morpher->replaceByMock('model');
 
         $result = $this->getHelper()->inflectWord(
-            'testphrasethatwillnottranslateonothermodules', Emagedev_RussianLanguage_Helper_Data::NOMINATIVE,
+            'testphrasethatwillnottranslateonothermodules', Emagedev_Morpher_Helper_Data::NOMINATIVE,
             false, array(), $translate
         );
 

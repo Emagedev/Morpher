@@ -36,7 +36,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Emagedev RussianLanguage module to newer versions in the future.
+ * the Emagedev Morpher module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -44,13 +44,13 @@
 
 /**
  * @category   Emagedev
- * @package    Emagedev_RussianLanguage
+ * @package    Emagedev_Morpher
  * @subpackage Model
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
 
 /**
- * Class Emagedev_RussianLanguage_Model_Inflection
+ * Class Emagedev_Morpher_Model_Inflection
  *
  * @method $this setPhrase(string $phrase)
  * @method string getPhrase()
@@ -61,15 +61,77 @@
  * @method $this setInflectedPhrase(string $phrase)
  * @method string getInflectedPhrase()
  */
-class Emagedev_RussianLanguage_Model_Inflection extends Mage_Core_Model_Abstract
+class Emagedev_Morpher_Model_Inflection extends Mage_Core_Model_Abstract
 {
+    const FLAGS_KEY = 'flags';
+
+    protected $flagsSerialized = true;
+
     protected function _construct()
     {
-        $this->_init('emagedev_russian/inflection');
+        $this->_init('morpher/inflection');
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return (string)$this->getInflectedPhrase();
+    }
+
+    /**
+     * Serialize flags before sabe
+     *
+     * @return $this
+     */
+    protected function _beforeSave()
+    {
+        $flags = $this->getData(self::FLAGS_KEY);
+
+        if ($flags && !$this->flagsSerialized) {
+            $this->setData(self::FLAGS_KEY, Mage::helper('morpher')->serializeFlags($flags));
+        }
+
+        return parent::_beforeSave();
+    }
+
+    /**
+     * Get array of flags that added on inflection fetch
+     *
+     * @return array
+     */
+    public function getFlags()
+    {
+        $flags = $this->getData(self::FLAGS_KEY);
+
+        if (!empty($flags) && $this->flagsSerialized) {
+            $flags = Mage::helper('morpher')->unserializeFlags($flags);
+            $this->setFlags($flags);
+        }
+
+        return $flags;
+    }
+
+    /**
+     * Set flags that added on inflection fetch
+     *
+     * @param array $flags
+     *
+     * @return $this
+     */
+    public function setFlags($flags)
+    {
+        if (is_array($flags)) {
+            $this->flagsSerialized = false;
+        }
+
+        if (is_string($flags)) {
+            $this->flagsSerialized = true;
+        }
+
+        $this->setData(self::FLAGS_KEY, $flags);
+
+        return $this;
     }
 }

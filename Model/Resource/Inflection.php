@@ -36,7 +36,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Emagedev RussianLanguage module to newer versions in the future.
+ * the Emagedev Morpher module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -44,17 +44,16 @@
 
 /**
  * @category   Emagedev
- * @package    Emagedev_RussianLanguage
+ * @package    Emagedev_Morpher
  * @subpackage Model
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
 
-class Emagedev_RussianLanguage_Model_Resource_Inflection extends Mage_Core_Model_Mysql4_Abstract
+class Emagedev_Morpher_Model_Resource_Inflection extends Mage_Core_Model_Mysql4_Abstract
 {
-
     protected function _construct()
     {
-        $this->_init('emagedev_russian/inflection', 'id');
+        $this->_init('morpher/inflection', 'id');
     }
 
 }

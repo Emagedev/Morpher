@@ -37,7 +37,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Emagedev RussianLanguage module to newer versions in the future.
+ * the Emagedev Morpher module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -46,61 +46,61 @@
 /**
  *
  * @category   Emagedev
- * @package    Emagedev_RussianLanguage
+ * @package    Emagedev_Morpher
  * @subpackage Config
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
 -->
 <config>
     <modules>
-        <Emagedev_RussianLanguage>
-            <version>1.0.0</version>
-        </Emagedev_RussianLanguage>
+        <Emagedev_Morpher>
+            <version>1.0.1</version>
+        </Emagedev_Morpher>
     </modules>
     <global>
         <helpers>
-            <emagedev_russian>
-                <class>Emagedev_RussianLanguage_Helper</class>
-            </emagedev_russian>
+            <morpher>
+                <class>Emagedev_Morpher_Helper</class>
+            </morpher>
         </helpers>
         <resources>
-            <emagedev_russianlanguage_setup>
+            <emagedev_morpher_setup>
                 <setup>
-                    <module>Emagedev_RussianLanguage</module>
+                    <module>Emagedev_Morpher</module>
                     <connection>core_setup</connection>
                 </setup>
-            </emagedev_russianlanguage_setup>
+            </emagedev_morpher_setup>
         </resources>
         <models>
-            <emagedev_russian>
-                <class>Emagedev_RussianLanguage_Model</class>
-                <resourceModel>emagedev_russian_resource</resourceModel>
-            </emagedev_russian>
-            <emagedev_russian_resource>
-                <class>Emagedev_RussianLanguage_Model_Resource</class>
+            <morpher>
+                <class>Emagedev_Morpher_Model</class>
+                <resourceModel>morpher_resource</resourceModel>
+            </morpher>
+            <morpher_resource>
+                <class>Emagedev_Morpher_Model_Resource</class>
                 <entities>
                     <inflection>
-                        <table>emagedev_russian_inflections</table>
+                        <table>morpher_inflections</table>
                     </inflection>
                 </entities>
-            </emagedev_russian_resource>
+            </morpher_resource>
         </models>
     </global>
     <adminhtml>
         <translate>
             <modules>
-                <Emagedev_RussianLanguage>
+                <Emagedev_Morpher>
                     <files>
-                        <default>Emagedev_RussianLanguage.csv</default>
+                        <default>Emagedev_Morpher.csv</default>
                     </files>
-                </Emagedev_RussianLanguage>
+                </Emagedev_Morpher>
             </modules>
         </translate>
     </adminhtml>
     <phpunit>
         <suite>
             <modules>
-                <Emagedev_RussianLanguage />
+                <Emagedev_Morpher />
             </modules>
         </suite>
     </phpunit>

@@ -36,7 +36,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Emagedev RussianLanguage module to newer versions in the future.
+ * the Emagedev Morpher module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -44,15 +44,15 @@
 
 /**
  * @category   Emagedev
- * @package    Emagedev_RussianLanguage
+ * @package    Emagedev_Morpher
  * @subpackage Test
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
 
 /**
- * Class Emagedev_RussianLanguage_Test_Model_Morpher_Api_Dispatcher
+ * Class Emagedev_Morpher_Test_Model_Morpher_Api_Dispatcher
  */
-class Emagedev_RussianLanguage_Test_Model_Morpher_Api_Dispatcher extends EcomDev_PHPUnit_Test_Case
+class Emagedev_Morpher_Test_Model_Morpher_Api_Dispatcher extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * Check is example response dispatched correctly
@@ -70,14 +70,14 @@ class Emagedev_RussianLanguage_Test_Model_Morpher_Api_Dispatcher extends EcomDev
         $expectRaw = file_get_contents($filePath);
         $expectXmlObject = new SimpleXMLElement($expectRaw);
 
-        $this->mockModel('emagedev_russian/inflection', array('save'))
+        $this->mockModel('morpher/inflection', array('save'))
             ->replaceByMock('model');
 
         $forms = $this->getModel()->dispatchXmlData($expectXmlObject, $phrase, $flags);
 
         /**
          * @var int $iterator
-         * @var Emagedev_RussianLanguage_Model_Inflection $form
+         * @var Emagedev_Morpher_Model_Inflection $form
          */
         foreach ($forms as $iterator => $form) {
             $expectations = $this->expected('auto')->getData();
@@ -100,10 +100,10 @@ class Emagedev_RussianLanguage_Test_Model_Morpher_Api_Dispatcher extends EcomDev
     /**
      * Get model for testing
      *
-     * @return Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
+     * @return Emagedev_Morpher_Model_Morpher_Api_Dispatcher
      */
     protected function getModel()
     {
-        return Mage::getModel('emagedev_russian/morpher_api_dispatcher');
+        return Mage::getModel('morpher/morpher_api_dispatcher');
     }
 }

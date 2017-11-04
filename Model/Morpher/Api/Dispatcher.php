@@ -36,7 +36,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Emagedev RussianLanguage module to newer versions in the future.
+ * the Emagedev Morpher module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -44,18 +44,18 @@
 
 /**
  * @category   Emagedev
- * @package    Emagedev_RussianLanguage
+ * @package    Emagedev_Morpher
  * @subpackage Model
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
 
 /**
- * Class Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
+ * Class Emagedev_Morpher_Model_Morpher_Api_Dispatcher
  *
  * Dispatcher model processing raw result coming from REST API
  * create new inflection-form models and saving them to cache
  */
-class Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
+class Emagedev_Morpher_Model_Morpher_Api_Dispatcher
 {
     const MULTIPLE_FORM = 'множественное';
 
@@ -70,7 +70,7 @@ class Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
      */
     public function dispatchXmlData(SimpleXMLElement $document, $phrase, $flags)
     {
-        $flagsKey = implode(',', $flags);
+        $flagsKey = Mage::helper('morpher')->serializeFlags($flags);
 
         $forms = $this->dispatchInflectionNodes($document, $phrase, false, $flagsKey);
 
@@ -125,12 +125,12 @@ class Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
      * @param string $result
      * @param string $flagsKey
      *
-     * @return Emagedev_RussianLanguage_Model_Inflection
+     * @return Emagedev_Morpher_Model_Inflection
      */
     protected function saveNewForm($phrase, $inflection, $multipleForm, $result, $flagsKey = '')
     {
-        /** @var Emagedev_RussianLanguage_Model_Inflection $newForm */
-        $newForm = Mage::getModel('emagedev_russian/inflection');
+        /** @var Emagedev_Morpher_Model_Inflection $newForm */
+        $newForm = Mage::getModel('morpher/inflection');
         $newForm
             ->setPhrase($phrase)
             ->setInflection($inflection)
@@ -145,10 +145,10 @@ class Emagedev_RussianLanguage_Model_Morpher_Api_Dispatcher
     /**
      * Get module data helper
      *
-     * @return Emagedev_RussianLanguage_Helper_Data
+     * @return Emagedev_Morpher_Helper_Data
      */
     protected function getDataHelper()
     {
-        return Mage::helper('emagedev_russian');
+        return Mage::helper('morpher');
     }
 }

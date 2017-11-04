@@ -36,7 +36,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Emagedev RussianLanguage module to newer versions in the future.
+ * the Emagedev Morpher module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -44,18 +44,18 @@
 
 /**
  * @category   Emagedev
- * @package    Emagedev_RussianLanguage
+ * @package    Emagedev_Morpher
  * @subpackage Helper
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
 
 /**
- * Class Emagedev_RussianLanguage_Helper_Data
+ * Class Emagedev_Morpher_Helper_Data
  *
  * Contains all usable constants for API,
  * and lot of useful interfaces
  */
-class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Data
+class Emagedev_Morpher_Helper_Data extends Mage_Core_Helper_Data
 {
     const NOMINATIVE = 'И';
     const GENITIVE = 'Р';
@@ -171,7 +171,7 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Data
     public function inflectMaleName($name, $inflection, $flags = array())
     {
         return $this->inflectWord(
-            $name, $inflection, array_merge($flags, array(self::FLAG_NAME, self::FLAG_MASCULINE))
+            $name, $inflection, false, array_merge($flags, array(self::FLAG_NAME, self::FLAG_MASCULINE))
         );
     }
 
@@ -186,7 +186,7 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Data
      */
     public function inflectFemaleName($name, $inflection, $flags = array())
     {
-        return $this->inflectWord($name, $inflection, array_merge($flags, array(self::FLAG_NAME, self::FLAG_FEMININE)));
+        return $this->inflectWord($name, $inflection, false, array_merge($flags, array(self::FLAG_NAME, self::FLAG_FEMININE)));
     }
 
     /**
@@ -210,7 +210,12 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Data
                 $translator = Mage::helper($translate);
             }
 
-            $phrase = $translator->__($phrase);
+            try {
+                $phrase = $translator->__($phrase);
+            } catch (Exception $e) {
+                Mage::logException($e);
+                Mage::log('Seems like morpher module can\'t find translation helper for ' . $translator);
+            }
         }
 
         try {
@@ -242,10 +247,42 @@ class Emagedev_RussianLanguage_Helper_Data extends Mage_Core_Helper_Data
     }
 
     /**
-     * @return Emagedev_RussianLanguage_Model_Morpher
+     * Serialize flags for saving to db
+     *
+     * @param array $flags
+     *
+     * @return string
+     */
+    public function serializeFlags($flags)
+    {
+        if (!is_array($flags) || empty($flags)) {
+            return '';
+        }
+
+        return serialize($flags);
+    }
+
+    /**
+     * Unerialize flags that saved to db
+     *
+     * @param array $flags
+     *
+     * @return string
+     */
+    public function unserializeFlags($flags)
+    {
+        if (!is_string($flags) || empty($flags)) {
+            return $flags;
+        }
+
+        return unserialize($flags);
+    }
+
+    /**
+     * @return Emagedev_Morpher_Model_Morpher
      */
     protected function getMorpher()
     {
-        return Mage::getModel('emagedev_russian/morpher');
+        return Mage::getModel('morpher/morpher');
     }
 }

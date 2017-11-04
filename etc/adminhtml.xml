@@ -37,7 +37,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Emagedev RussianLanguage module to newer versions in the future.
+ * the Emagedev Morpher module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -46,7 +46,7 @@
 /**
  *
  * @category   Emagedev
- * @package    Emagedev_RussianLanguage
+ * @package    Emagedev_Morpher
  * @subpackage Config
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
@@ -60,7 +60,7 @@
                         <children>
                             <config>
                                 <children>
-                                    <morpher_api translate="title" module="emagedev_russian">
+                                    <morpher_api translate="title" module="morpher">
                                         <title>Morpher.ru API</title>
                                     </morpher_api>
                                 </children>

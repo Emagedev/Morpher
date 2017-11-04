@@ -1,6 +1,6 @@
 tables:
   core/translate:
-    - string: Emagedev_RussianLanguage::testphrasethatwillnottranslateonothermodules
+    - string: Emagedev_Morpher::testphrasethatwillnottranslateonothermodules
       translate: test1
       locale: en_US
       crc_string: '1591228201'

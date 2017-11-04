@@ -36,7 +36,7 @@
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade
- * the Emagedev RussianLanguage module to newer versions in the future.
+ * the Emagedev Morpher module to newer versions in the future.
  *
  * @copyright  Copyright (C), emagedev.com
  * @license    http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
@@ -44,15 +44,15 @@
 
 /**
  * @category   Emagedev
- * @package    Emagedev_RussianLanguage
+ * @package    Emagedev_Morpher
  * @subpackage Model
  * @author     Dmitry Burlakov <dantaeusb@icloud.com>
  */
 
 /**
- * Class Emagedev_RussianLanguage_Model_Morpher
+ * Class Emagedev_Morpher_Model_Morpher
  */
-class Emagedev_RussianLanguage_Model_Morpher
+class Emagedev_Morpher_Model_Morpher
 {
     /**
      * Inflect word, first try cache, then API
@@ -60,18 +60,18 @@ class Emagedev_RussianLanguage_Model_Morpher
      * @param string $phrase
      * @param string $inflection
      * @param bool   $multi
+     * @param array  $flags
      *
      * @return string
      */
     public function inflect($phrase, $inflection, $multi = false, $flags = array())
     {
-        $inflectedPhrase = $this->cacheLookup($phrase, $inflection, $multi);
+        $inflectedPhrase = $this->cacheLookup($phrase, $inflection, $multi, $flags);
 
-        if (empty($inflectedPhrase)) {
+        if (!$inflectedPhrase) {
             $this->runMorpher($phrase, $flags);
+            $inflectedPhrase = $this->cacheLookup($phrase, $inflection, $multi, $flags);
         }
-
-        $inflectedPhrase = $this->cacheLookup($phrase, $inflection, $multi);
 
         return $inflectedPhrase ? $inflectedPhrase->getInflectedPhrase() : $phrase;
     }
@@ -84,18 +84,19 @@ class Emagedev_RussianLanguage_Model_Morpher
      * @param bool   $multi
      * @param array  $flags
      *
-     * @return Emagedev_RussianLanguage_Model_Inflection
+     * @return Emagedev_Morpher_Model_Inflection|false
      */
     protected function cacheLookup($phrase, $inflection, $multi = false, $flags = array())
     {
-        /** @var Emagedev_RussianLanguage_Model_Resource_Inflection_Collection $collection */
-        $collection = Mage::getModel('emagedev_russian/inflection')->getCollection();
+        /** @var Emagedev_Morpher_Model_Resource_Inflection_Collection $collection */
+        $collection = Mage::getModel('morpher/inflection')->getCollection();
         $collection
             ->addFieldToFilter('phrase', $phrase)
             ->addFieldToFilter('inflection', $inflection)
-            ->addFieldToFilter('multi', $multi);
+            ->addFieldToFilter('multi', $multi ? 1 : 0)
+            ->addFieldToFilter('flags', Mage::helper('morpher')->serializeFlags($flags));
 
-        return $collection->getFirstItem();
+        return count($collection) > 0 ? $collection->getFirstItem() : false;
     }
 
     /**
@@ -106,8 +107,8 @@ class Emagedev_RussianLanguage_Model_Morpher
      */
     protected function runMorpher($phrase, $flags)
     {
-        /** @var Emagedev_RussianLanguage_Model_Morpher_Api_Adapter $morpher */
-        $morpher = Mage::getModel('emagedev_russian/morpher_api_adapter');
+        /** @var Emagedev_Morpher_Model_Morpher_Api_Adapter $morpher */
+        $morpher = Mage::getModel('morpher/morpher_api_adapter');
         $morpher->run($phrase, $flags);
     }
 }
