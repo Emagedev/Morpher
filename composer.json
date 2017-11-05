@@ -3,7 +3,7 @@
   "description": "Magento extension to inflect russian word with API of website morpher.ru",
   "type": "magento-module",
   "license": "BSD-3-Clause",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "authors": [
     {
       "name": "Dmitry Burlakov",
