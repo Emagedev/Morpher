@@ -35,7 +35,7 @@ $installer = $this;
 /* @var $installer Mage_Eav_Model_Entity_Setup */
 
 $table = $installer->getConnection()
-    ->newTable($installer->getTable('emagedev_russian/inflection'))
+    ->newTable($installer->getTable('morpher/inflection'))
     ->addColumn('id', Varien_Db_Ddl_Table::TYPE_INTEGER, null, array(
         'identity'  => true,
         'unsigned'  => true,
