@@ -1,5 +1,5 @@
 {
-  "name": "dantaeusb/mage-morpher",
+  "name": "emagedev/morpher",
   "description": "Magento extension to inflect russian word with API of website morpher.ru",
   "type": "magento-module",
   "license": "BSD-3-Clause",
