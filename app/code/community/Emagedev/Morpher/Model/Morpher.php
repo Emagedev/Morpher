@@ -98,7 +98,8 @@ class Emagedev_Morpher_Model_Morpher
             ->addFieldToFilter('phrase', $phrase)
             ->addFieldToFilter('inflection', $inflection)
             ->addFieldToFilter('multi', $multi ? 1 : 0)
-            ->addFieldToFilter('flags', Mage::helper('morpher')->serializeFlags($flags));
+            ->addFieldToFilter('flags', Mage::helper('morpher')->serializeFlags($flags))
+            ->setPageSize(1);
 
         return count($collection) > 0 ? $collection->getFirstItem() : false;
     }
