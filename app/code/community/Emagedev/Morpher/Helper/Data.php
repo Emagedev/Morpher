@@ -122,8 +122,6 @@ class Emagedev_Morpher_Helper_Data extends Mage_Core_Helper_Data
      */
     public function inflectWordByNumber($number, $phrase, $keepNumber = false, $translate = false)
     {
-        return $phrase;
-
         $meaningNumber = abs($number % 100);
 
         if ($meaningNumber != 0 && ($meaningNumber < 11 || $meaningNumber > 19)) {
@@ -158,8 +156,6 @@ class Emagedev_Morpher_Helper_Data extends Mage_Core_Helper_Data
      */
     public function inflectName($name, $inflection, $flags = array())
     {
-        return $name;
-
         return $this->inflectWord($name, $inflection, array_merge($flags, array(self::FLAG_NAME)));
     }
 
@@ -174,8 +170,6 @@ class Emagedev_Morpher_Helper_Data extends Mage_Core_Helper_Data
      */
     public function inflectMaleName($name, $inflection, $flags = array())
     {
-        return $name;
-
         return $this->inflectWord(
             $name, $inflection, false, array_merge($flags, array(self::FLAG_NAME, self::FLAG_MASCULINE))
         );
@@ -192,8 +186,6 @@ class Emagedev_Morpher_Helper_Data extends Mage_Core_Helper_Data
      */
     public function inflectFemaleName($name, $inflection, $flags = array())
     {
-        return $name;
-
         return $this->inflectWord($name, $inflection, false, array_merge($flags, array(self::FLAG_NAME, self::FLAG_FEMININE)));
     }
 
@@ -211,8 +203,6 @@ class Emagedev_Morpher_Helper_Data extends Mage_Core_Helper_Data
      */
     public function inflectWord($phrase, $inflection, $multi = false, $flags = array(), $translate = false)
     {
-        return $phrase;
-
         if ($translate === true || is_string($translate)) {
             /** @var Mage_Core_Helper_Data $translator */
             $translator = $this;

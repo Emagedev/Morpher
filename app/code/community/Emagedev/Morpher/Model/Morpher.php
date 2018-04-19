@@ -88,6 +88,10 @@ class Emagedev_Morpher_Model_Morpher
      */
     protected function cacheLookup($phrase, $inflection, $multi = false, $flags = array())
     {
+        if ($inflection == Emagedev_Morpher_Helper_Data::NOMINATIVE && !$multi) {
+            return $this->getDefault($phrase, $flags);
+        }
+
         /** @var Emagedev_Morpher_Model_Resource_Inflection_Collection $collection */
         $collection = Mage::getModel('morpher/inflection')->getCollection();
         $collection
@@ -97,6 +101,27 @@ class Emagedev_Morpher_Model_Morpher
             ->addFieldToFilter('flags', Mage::helper('morpher')->serializeFlags($flags));
 
         return count($collection) > 0 ? $collection->getFirstItem() : false;
+    }
+
+    /**
+     * Get phrase in nominative inflection single form - just return phrase itself,
+     * wrapped into model
+     *
+     * @param string $phrase
+     *
+     * @return Emagedev_Morpher_Model_Inflection
+     */
+    protected function getDefault($phrase, $flags)
+    {
+        /** @var Emagedev_Morpher_Model_Inflection $default */
+        $default = Mage::getModel('morpher/inflection')
+            ->setPhrase($phrase)
+            ->setInflection(Emagedev_Morpher_Helper_Data::NOMINATIVE)
+            ->setMulti(false)
+            ->setInflectedPhrase($phrase)
+            ->setFlags($flags);
+
+        return $default;
     }
 
     /**
